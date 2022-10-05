@@ -22,6 +22,7 @@ import org.apache.commons.logging.LogFactory;
 import org.osgi.service.component.ComponentContext;
 import org.wso2.carbon.identity.application.authentication.framework.ApplicationAuthenticator;
 import org.wso2.carbon.identity.authenticator.duo.DuoAuthenticator;
+import org.wso2.carbon.identity.authenticator.duo.DuoUniversalPrompt;
 import org.wso2.carbon.user.core.service.RealmService;
 
 import java.util.Hashtable;
@@ -48,6 +49,19 @@ public class DuoAuthenticatorServiceComponent {
         } catch (Exception e) {
             log.fatal("Error while activating the DUO authenticator ", e);
         }
+
+        try {
+            DuoUniversalPrompt authenticator = new DuoUniversalPrompt();
+            Hashtable<String, String> props = new Hashtable<>();
+            ctxt.getBundleContext().registerService(ApplicationAuthenticator.class.getName(),
+                    authenticator, props);
+            if (log.isDebugEnabled()) {
+                log.debug("UniversalDuoAuthenticator bundle is activated");
+            }
+        } catch (Exception e) {
+            log.fatal("Error while activating the DUO authenticator ", e);
+        }
+
     }
 
     protected void deactivate(ComponentContext ctxt) {
